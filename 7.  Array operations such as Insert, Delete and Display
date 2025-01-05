@@ -1,0 +1,104 @@
+#include <stdio.h>
+
+#define MAX 100
+
+void display(int arr[], int n) {
+    printf("Array: ");
+    for (int i = 0; i < n; i++)
+        printf("%d ", arr[i]);
+    printf("\n");
+}
+
+int main() {
+    int arr[MAX], n = 0, choice, pos, value;
+
+    while (1) {
+        printf("\nArray Operations:\n");
+        printf("1. Insert\n");
+        printf("2. Delete\n");
+        printf("3. Display\n");
+        printf("4. Exit\n");
+        printf("Enter your choice: ");
+        scanf("%d", &choice);
+
+        switch (choice) {
+            case 1: // Insert
+                if (n >= MAX) {
+                    printf("Array is full. Cannot insert.\n");
+                } else {
+                    printf("Enter position (1 to %d): ", n + 1);
+                    scanf("%d", &pos);
+                    if (pos < 1 || pos > n + 1) {
+                        printf("Invalid position.\n");
+                    } else {
+                        printf("Enter value to insert: ");
+                        scanf("%d", &value);
+                        for (int i = n; i >= pos; i--)
+                            arr[i] = arr[i - 1];
+                        arr[pos - 1] = value;
+                        n++;
+                        printf("Inserted %d at position %d.\n", value, pos);
+                    }
+                }
+                break;
+
+            case 2: // Delete
+                if (n == 0) {
+                    printf("Array is empty. Cannot delete.\n");
+                } else {
+                    printf("Enter position to delete (1 to %d): ", n);
+                    scanf("%d", &pos);
+                    if (pos < 1 || pos > n) {
+                        printf("Invalid position.\n");
+                    } else {
+                        printf("Deleted %d from position %d.\n", arr[pos - 1], pos);
+                        for (int i = pos - 1; i < n - 1; i++)
+                            arr[i] = arr[i + 1];
+                        n--;
+                    }
+                }
+                break;
+
+            case 3: // Display
+                if (n == 0) {
+                    printf("Array is empty.\n");
+                } else {
+                    display(arr, n);
+                }
+                break;
+
+            case 4: // Exit
+                printf("Exiting program.\n");
+                return 0;
+
+            default:
+                printf("Invalid choice. Please try again.\n");
+        }
+    }
+}
+OUTPUT::
+Array Operations:
+1. Insert
+2. Delete
+3. Display
+4. Exit
+Enter your choice: 1
+Enter position (1 to 1): 1
+Enter value to insert: 10
+Inserted 10 at position 1.
+
+Array Operations:
+1. Insert
+2. Delete
+3. Display
+4. Exit
+Enter your choice: 3
+Array: 10
+
+Array Operations:
+1. Insert
+2. Delete
+3. Display
+4. Exit
+Enter your choice: 4
+Exiting program.
