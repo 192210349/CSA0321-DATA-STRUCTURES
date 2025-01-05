@@ -1,0 +1,79 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <ctype.h>
+
+#define MAX 50
+
+// Stack structure
+struct Stack {
+    int arr[MAX];
+    int top;
+};
+
+// Function to initialize the stack
+void initStack(struct Stack* stack) {
+    stack->top = -1;
+}
+
+// Function to check if the stack is empty
+int isEmpty(struct Stack* stack) {
+    return stack->top == -1;
+}
+
+// Function to push an element onto the stack
+void push(struct Stack* stack, int value) {
+    if (stack->top == MAX - 1) {
+        printf("Stack Overflow\n");
+    } else {
+        stack->arr[++(stack->top)] = value;
+    }
+}
+
+// Function to pop an element from the stack
+int pop(struct Stack* stack) {
+    if (isEmpty(stack)) {
+        printf("Stack Underflow\n");
+        return -1;
+    } else {
+        return stack->arr[(stack->top)--];
+    }
+}
+
+// Function to evaluate a postfix expression
+int evaluatePostfix(char* expr) {
+    struct Stack stack;
+    initStack(&stack);
+
+    for (int i = 0; expr[i] != '\0'; i++) {
+        // If the character is a digit, push it onto the stack
+        if (isdigit(expr[i])) {
+            push(&stack, expr[i] - '0');
+        }
+        // If the character is an operator, pop two operands and apply the operator
+        else if (expr[i] == '+' || expr[i] == '-' || expr[i] == '*' || expr[i] == '/') {
+            int operand2 = pop(&stack);
+            int operand1 = pop(&stack);
+            int result;
+
+            switch (expr[i]) {
+                case '+': result = operand1 + operand2; break;
+                case '-': result = operand1 - operand2; break;
+                case '*': result = operand1 * operand2; break;
+                case '/': result = operand1 / operand2; break;
+            }
+            push(&stack, result);
+        }
+    }
+    return pop(&stack);  // Final result will be the only element left in the stack
+}
+
+int main() {
+    char expr[MAX];
+    printf("Enter a postfix expression: ");
+    scanf("%s", expr);
+
+    int result = evaluatePostfix(expr);
+    printf("The result of the postfix expression is: %d\n", result);
+
+    return 0;
+}
