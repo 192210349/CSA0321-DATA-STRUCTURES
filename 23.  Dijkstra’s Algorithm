@@ -1,0 +1,88 @@
+#include <stdio.h>
+#include <limits.h>
+
+#define MAX 10
+
+int graph[MAX][MAX], dist[MAX], prev[MAX], visited[MAX];
+int n;
+
+void dijkstra(int source) {
+    // Initialize the distances and visited array
+    for (int i = 0; i < n; i++) {
+        dist[i] = INT_MAX;
+        visited[i] = 0;
+        prev[i] = -1;
+    }
+
+    dist[source] = 0;
+
+    // Find the shortest path for all vertices
+    for (int i = 0; i < n - 1; i++) {
+        // Find the vertex with the minimum distance
+        int min = INT_MAX, u = -1;
+        for (int j = 0; j < n; j++) {
+            if (!visited[j] && dist[j] < min) {
+                min = dist[j];
+                u = j;
+            }
+        }
+
+        visited[u] = 1;
+
+        // Update the distance of the adjacent vertices
+        for (int v = 0; v < n; v++) {
+            if (graph[u][v] && !visited[v] && dist[u] != INT_MAX && dist[u] + graph[u][v] < dist[v]) {
+                dist[v] = dist[u] + graph[u][v];
+                prev[v] = u;
+            }
+        }
+    }
+}
+
+void printPath(int j) {
+    if (prev[j] == -1)
+        return;
+    printPath(prev[j]);
+    printf("%d ", j);
+}
+
+int main() {
+    int edges, u, v, weight;
+    printf("Enter the number of nodes: ");
+    scanf("%d", &n);
+
+    // Initialize the graph with 0
+    for (int i = 0; i < n; i++) {
+        for (int j = 0; j < n; j++) {
+            graph[i][j] = 0;
+        }
+    }
+
+    printf("Enter the number of edges: ");
+    scanf("%d", &edges);
+
+    // Input edges and weights
+    for (int i = 0; i < edges; i++) {
+        printf("Enter edge (u, v, weight): ");
+        scanf("%d %d %d", &u, &v, &weight);
+        graph[u][v] = weight;
+        graph[v][u] = weight; // For undirected graph
+    }
+
+    int source;
+    printf("Enter the source node: ");
+    scanf("%d", &source);
+
+    dijkstra(source);
+
+    // Output the shortest path and distance for each vertex
+    for (int i = 0; i < n; i++) {
+        if (i != source) {
+            printf("Shortest distance from %d to %d is %d. Path: %d ", source, i, dist[i], source);
+            printPath(i);
+            printf("\n");
+        }
+    }
+
+    return 0;
+}
