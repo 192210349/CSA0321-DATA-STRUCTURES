@@ -1,0 +1,30 @@
+#include <stdio.h>
+
+int main() {
+    int num, i;
+    unsigned long long factorial = 1;
+
+    // Input from the user
+    printf("Enter a number to find its factorial: ");
+    scanf("%d", &num);
+
+    // Handle negative numbers
+    if (num < 0) {
+        printf("Factorial of a negative number doesn't exist.\n");
+    } else {
+        // Calculate factorial using a loop
+        for (i = 1; i <= num; i++) {
+            factorial *= i;
+        }
+        // Display the result
+        printf("Factorial of %d = %llu\n", num, factorial);
+    }
+
+    return 0;
+}
+
+
+OUTPUT:
+
+Enter a number to find its factorial: 5
+Factorial of 5 = 120
