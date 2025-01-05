@@ -1,0 +1,92 @@
+#include <stdio.h>
+#include <stdlib.h>
+
+#define MAX 10
+
+// Structure to represent an edge
+typedef struct {
+    int u, v, weight;
+} Edge;
+
+int parent[MAX], rank[MAX];
+
+// Function to initialize the disjoint set
+void initialize(int n) {
+    for (int i = 0; i < n; i++) {
+        parent[i] = i;
+        rank[i] = 0;
+    }
+}
+
+// Find the parent of a node
+int find(int x) {
+    if (parent[x] != x) {
+        parent[x] = find(parent[x]); // Path compression
+    }
+    return parent[x];
+}
+
+// Union by rank to combine two sets
+void unionSets(int x, int y) {
+    int rootX = find(x);
+    int rootY = find(y);
+    
+    if (rootX != rootY) {
+        if (rank[rootX] > rank[rootY]) {
+            parent[rootY] = rootX;
+        } else if (rank[rootX] < rank[rootY]) {
+            parent[rootX] = rootY;
+        } else {
+            parent[rootY] = rootX;
+            rank[rootX]++;
+        }
+    }
+}
+
+// Function to compare two edges (for sorting)
+int compare(const void *a, const void *b) {
+    return ((Edge *)a)->weight - ((Edge *)b)->weight;
+}
+
+// Kruskal's Algorithm to find MST
+void kruskal(Edge edges[], int n, int e) {
+    qsort(edges, e, sizeof(Edge), compare); // Sort edges by weight
+    initialize(n);
+    
+    printf("Edges in the Minimum Spanning Tree (MST):\n");
+    
+    for (int i = 0; i < e; i++) {
+        int u = edges[i].u;
+        int v = edges[i].v;
+        int weight = edges[i].weight;
+        
+        // If u and v are in different sets, include the edge in MST
+        if (find(u) != find(v)) {
+            unionSets(u, v);
+            printf("%d - %d: %d\n", u, v, weight);
+        }
+    }
+}
+
+int main() {
+    int n, e;
+    
+    // Input number of nodes and edges
+    printf("Enter the number of nodes: ");
+    scanf("%d", &n);
+    printf("Enter the number of edges: ");
+    scanf("%d", &e);
+    
+    Edge edges[e];
+    
+    // Input edges (u, v, weight)
+    printf("Enter the edges (u v weight):\n");
+    for (int i = 0; i < e; i++) {
+        scanf("%d %d %d", &edges[i].u, &edges[i].v, &edges[i].weight);
+    }
+
+    // Call Kruskal's algorithm
+    kruskal(edges, n, e);
+    
+    return 0;
+}
